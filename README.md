@@ -5,7 +5,7 @@ A Windows screensaver that counts down to a date you choose. The message sits on
 The sentence is the same one the original program painted:
 
 ```text
-There are 2 weeks and 3 days until Christmas Total days 17
+There are 2 weeks and 3 days until Holiday Total days 17
 ```
 
 Weeks are the whole number of 7-day blocks, and the leftover days are the remainder. A date that has already passed counts backward (the numbers go negative). One of something is singular (`1 week`, `1 day`); every other count, including zero, is plural.
