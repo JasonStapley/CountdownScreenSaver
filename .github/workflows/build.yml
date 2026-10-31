@@ -1,0 +1,57 @@
+name: Build screensaver
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build
+        run: dotnet build CountdownScreenSaver.sln -c Release --nologo
+
+      - name: Test
+        run: dotnet test CountdownScreenSaver.sln -c Release --no-build --nologo
+
+      - name: Publish single-file screensaver
+        run: >
+          dotnet publish src/CountdownScreenSaver/CountdownScreenSaver.csproj
+          -c Release
+          -r win-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true
+          -p:DebugType=none
+          -p:DebugSymbols=false
+          -o artifacts/publish
+
+      - name: Rename executable to .scr
+        shell: pwsh
+        run: |
+          $exe = Join-Path "artifacts/publish" "CountdownScreenSaver.exe"
+          $scr = Join-Path "artifacts/publish" "CountdownScreenSaver.scr"
+          if (-not (Test-Path $exe)) { throw "Publish did not produce $exe" }
+          Move-Item -Force $exe $scr
+          Get-Item $scr | Select-Object FullName, Length
+
+      - name: Upload screensaver
+        uses: actions/upload-artifact@v4
+        with:
+          name: CountdownScreenSaver
+          path: artifacts/publish/CountdownScreenSaver.scr
+          if-no-files-found: error

@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>CountdownScreenSaver</RootNamespace>
+    <AssemblyName>CountdownScreenSaver.Core</AssemblyName>
+    <Version>2.0.0</Version>
+    <Description>Countdown text, launch arguments, and settings for Countdown Screen Saver.</Description>
+  </PropertyGroup>
+</Project>
